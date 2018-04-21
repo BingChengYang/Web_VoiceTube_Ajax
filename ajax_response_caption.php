@@ -8,7 +8,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
   $captionPath = 'captions/' . $capFile .'.JSON';
     # Load content from JSON file
     if(is_readable($captionPath))  
-      $capContent = file_get_contents($captionPath);
+      $jCaption = file_get_contents($captionPath);
     else                           
       throw new Exception("Cannot load content!");
 
@@ -19,26 +19,8 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     echo $e->getMessage();
   }
 
-  # Convert all JSON string to object 
-  $capContents = json_decode($capContent);
+  # Response caption's JSON string
+  print $jCaption;
   
-}
-?>
-
-<?php
-# Response caption's HTML
-
-foreach($capContents->en as $key => $caption)
-{
-print <<<STRING
-                  <div id="show-caption-table">
-                    <td class="align-top" width="25">
-                      <a href="javascript:;" onclick="playCaptions('$caption->start', '$caption->dur')">
-                        <span class="glyphicon glyphicon-play"></span>
-                      </a>
-                    </td>
-                    <td id="seq-$key" start="$caption->start" end="$caption->dur">$caption->text</td>
-                  </div>
-STRING;
 }
 ?>

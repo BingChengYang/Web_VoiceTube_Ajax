@@ -40,15 +40,13 @@ ajaxRequest3.onreadystatechange = function() {
     if(ajaxRequest3.readyState == 4 && ajaxRequest3.status == "200") {
        // get the ajax response successfully
        var captionData = ajaxRequest3.responseText;
-       renderCapHTML(captionData); // use renderCapHTML() to add the data into HTML
+
+       // parse JSON string 
+       captionData = JSON.parse(captionData);
+
+       // use renderCapHTML() to add the data into HTML
+       renderCapHTML(captionData); 
     }
-}
-
-// Function for adding response JSON into HTML
-function renderCapHTML(jcontent){
-
-  var capt = document.getElementById("caption_detail");
-  capt.insertAdjacentHTML('beforeend', jcontent);
 }
 
 // Send request to server
@@ -57,6 +55,24 @@ ajaxRequest3.open('GET', 'ajax_response_caption.php' + queryString3 + file, true
 ajaxRequest3.send(null);
 // End of loading caption
 
+// Function for adding response JSON into HTML
+function renderCapHTML(jcontent){
 
+  var wrapper = $('#caption_detail');
 
-
+  for(var key in jcontent.en)
+  {
+    //var end = Number(jcontent.en[key].start) + Number(jcontent.en[key].dur);
+    container = $('<div id=show-caption-table"><'+'/'+'div>');
+    wrapper.append(container);
+    container.append(
+      '<td class="align-top" width="25">'+
+        '<a href="javascript:;" onclick="playCaptions('+Number(jcontent.en[key].start)+', '+Number(jcontent.en[key].dur)+');">' +
+          '<span class="glyphicon glyphicon-play"></span>'+
+        '</a>'+
+        //'<div id="seq-' + key + '" start="'+jcontent.en[key].start+'" end="'+ Number(jcontent.en[key].dur) +'">' +jcontent.en[key].text + '</div>'+
+      '</td>');
+    
+    container.append('<td id="seq-' + key + '" start="'+jcontent.en[key].start+'" end="'+ Number(jcontent.en[key].dur) +'">' +jcontent.en[key].text + '</td>');
+  }
+}

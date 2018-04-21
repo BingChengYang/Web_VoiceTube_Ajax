@@ -17,7 +17,7 @@ var $thumb = $('#thumb').infiniteScroll({
   responseType: 'text' 
 });
 
-// Parse JSON string into object and put into HTML
+// When next page is loaded , Parse JSON string into object and put into HTML
 $thumb.on( 'load.infiniteScroll', function( event, response ) {
   // prase response text into JSON data
   var data = JSON.parse( response );

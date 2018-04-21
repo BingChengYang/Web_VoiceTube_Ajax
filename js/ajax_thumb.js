@@ -10,7 +10,7 @@ ajaxRequest1.onreadystatechange = function() {
        // parse JSON string 
        videoData1 = JSON.parse(videoData1);
 
-       // use renderHTML() to add the data into HTML
+       // use renderThumbHTML() to add the data into HTML
        renderThumbHTML(videoData1);
     }
 }
@@ -190,5 +190,3 @@ function renderThumbHTML(jcontent){
     thum.insertBefore(newdiv,null);
   }
 }
-
-

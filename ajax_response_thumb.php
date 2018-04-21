@@ -32,21 +32,10 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     $numShowVedio = 4;
   }
 }
-
-// #TEST
-//   $page = 2;
-//   $maxShowVedio = 9;
-//   $numShowVedio = 0;
-//   if(4 * $page > $maxShowVedio){
-//     $numShowVedio = $maxShowVedio - ($page-1)*4;
-//   }else{
-//     $numShowVedio = 4;
-//   }
-
 ?>
 
 <?php
-# Response thumb's HTML
+# Response thumb's JSON string
 $first = true;
 print '['; # Make an array
 for($i = ($page-1)*4; $i < (($page-1)*4) + $numShowVedio; $i++)
