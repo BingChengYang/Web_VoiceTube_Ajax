@@ -10,8 +10,17 @@ function getRequestString()
 	}
 }
 
-$('#thumb').infiniteScroll({
+var $thumb = $('#thumb').infiniteScroll({
   path: getRequestString,
-  append: '.single-thumb',
-  status: '.page-load-status'
+  status: '.page-load-status',
+  // load page as text, becauz we get JSON string
+  responseType: 'text' 
+});
+
+// Parse JSON string into object and put into HTML
+$thumb.on( 'load.infiniteScroll', function( event, response ) {
+  // prase response text into JSON data
+  var data = JSON.parse( response );
+  // put that data into HTML, in ajax_thumb.js
+  renderThumbHTML(data);
 });

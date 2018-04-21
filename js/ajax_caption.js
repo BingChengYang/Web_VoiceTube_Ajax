@@ -44,7 +44,7 @@ ajaxRequest3.onreadystatechange = function() {
     }
 }
 
-// Function for adding response text into HTML
+// Function for adding response JSON into HTML
 function renderCapHTML(jcontent){
 
   var capt = document.getElementById("caption_detail");
