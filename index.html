@@ -1,49 +1,3 @@
-<?php
-# Load JSON Data
-$contentPath = "content.JSON";
-$adPath = "ad.JSON";
-if($_SERVER['REQUEST_METHOD'] == 'GET'){
-	try
-	{
-	$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL);
-	if($page == null){
-		$page = 1;
-	}
-
-	  # Load content from JSON file
-	  if(is_readable($contentPath))  
-	    $jContent = file_get_contents($contentPath);
-	  else                           
-	    throw new Exception("Cannot load content!");
-
-	  # Read ad from JSON file
-	  if(is_readable($adPath))  
-	    $jAd = file_get_contents($adPath);
-	  else                           
-	    throw new Exception("Cannot load ad!");
-
-	}
-	catch(Exception $e)
-	{
-	  header('HTTP/1.1 400 Bad request'); 
-	  echo $e->getMessage();
-	}
-
-	# Convert all JSON string to object 
-	$contents = json_decode($jContent);
-	$ads = json_decode($jAd);
-	
-	$maxShowVedio = 9;
-	if(4*$page >$maxShowVedio){
-		$numShowVedio = $maxShowVedio;
-	}else{
-		$numShowVedio = 4*$page;
-	}
-}
-#var_dump($contents);
-?>
-
-
 <!DOCTYPE html>
 <html>
 
@@ -86,7 +40,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 	                    <span class="icon-bar"></span> 
                		</button>
 
-					<a class="navbar-brand" href="index.php">
+					<a class="navbar-brand" href="index.html">
 						<img class="img-logo" src="https://cdn.voicetube.com/assets/img/vt_logo-with_icon-170111-white.png">
 					</a>
 				</div>

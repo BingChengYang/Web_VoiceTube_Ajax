@@ -13,6 +13,7 @@ function getRequestString()
 var $thumb = $('#thumb').infiniteScroll({
   path: getRequestString,
   status: '.page-load-status',
+  history: false,
   // load page as text, becauz we get JSON string
   responseType: 'text' 
 });
