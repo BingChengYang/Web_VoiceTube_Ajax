@@ -24,12 +24,13 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
   $contents = json_decode($jContent);
   
   #calculate the number of video need to send back
-  $maxShowVedio = 9;
+  $maxShowVedio = 30;
   $numShowVedio = 0;
-  if(4 * $page > $maxShowVedio){
-    $numShowVedio = $maxShowVedio - ($page-1)*4;
+  $pageShowVedio = 8;
+  if($pageShowVedio * $page > $maxShowVedio){
+    $numShowVedio = $maxShowVedio - ($page-1)*$pageShowVedio;
   }else{
-    $numShowVedio = 4;
+    $numShowVedio = $pageShowVedio;
   }
 }
 ?>
@@ -38,7 +39,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 # Response thumb's JSON string
 $first = true;
 print '['; # Make an array
-for($i = ($page-1)*4; $i < (($page-1)*4) + $numShowVedio; $i++)
+for($i = ($page-1)*$pageShowVedio; $i < (($page-1)*$pageShowVedio) + $numShowVedio; $i++)
 {
   if($first) $first = false;
   else print ',';

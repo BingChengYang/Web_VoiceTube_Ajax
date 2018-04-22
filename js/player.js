@@ -24,8 +24,10 @@ function fullScreen(){
 
 function onYouTubeIframeAPIReady() {
 
+  //console.log(videoId);
+
   player = new YT.Player('muteYouTubeVideoPlayer', {
-    videoId: videoId, // YouTube 影片ID 在 getUrlPara裡設定
+    videoId: String(videoId), // YouTube 影片ID 在 getUrlPara裡設定
     width: 560,               // 播放器寬度 (px)
     height: 316,              // 播放器高度 (px)
     playerVars: {
