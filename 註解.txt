@@ -12,3 +12,21 @@ ajax_response_caption.php:
 
 form.js:
 (1) after submit then clean the form :line1
+
+api_getJson:
+(1) using api to get video’s information : line111&114
+(2) using the information got from api to generate the Json string we need for the homepage : line119
+(3) get the video’s caption information from api, then get the caption’s language : line132
+(4) get the caption’s xml file : line136
+(5) start to parse the caption’s xml by using simplexml parser, then generate the caption’s Json string we need : line139-153
+(6) escape two Json string and insert in database : line156-166
+(7) go to the player.html to play the video with the caption : line174
+(8) if the input url is playlist’s url then will go to the playlist.php to show all videos in the playlist : line101
+
+
+playlist.php:
+(1)get the playlist’s information : line67
+(2) get the items in playlist : line71
+(3) calculate how many page will the playlist have : line75
+(4) start to print the page : line88
+(5) using the table of bootstrap and show all videos of the playlist, and will insert into database when the video’s caption can be got by api : line121-203

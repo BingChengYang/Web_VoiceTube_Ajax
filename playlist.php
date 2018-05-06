@@ -62,22 +62,21 @@ function getYouTubeVideoTime($timestr)
 	return $finalTime;
 }
 
-// $next_page = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PLm_3vnTS-pvmZFuF3L1Pyhqf8kTTYVKjW&key=AIzaSyAgWfAeq7kHU0PhMls1BqT0fMs-9iHNEv8&pageToken="."CAUQAA";
 
+// first to get basic information of the playlist
 $playlist_info_url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=".$listid."&key=".$api_key;
 $playlist_info = json_decode(file_get_contents($playlist_info_url));
 
+// get the items in the playlist by using api
 $api_list_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=".$listid."&key=".$api_key;
 $listdata = json_decode(file_get_contents($api_list_url));
 
-
+// calculate how many page that the playlist will have when the request for each page's items is max in 50
 $playlist_totalResults = $listdata->pageInfo->totalResults;
 $playlist_resultsPerPage = $listdata->pageInfo->resultsPerPage;
-$needToNextPage = false;
 $totalPageNum = 1;
 
 if($playlist_resultsPerPage < $playlist_totalResults){ 
-	$needToNextPage = true;
 	if($playlist_totalResults%$playlist_resultsPerPage == 0)
 		$totalPageNum = $playlist_totalResults/$playlist_resultsPerPage;
 	else
@@ -125,7 +124,7 @@ echo '<div class="container">';
 					$pagedata = json_decode(file_get_contents($page_url));
 
 					for($v = 0; $v < count($pagedata->items); $v++){
-						//get caption language first
+						
 						$listItem = $pagedata->items[$v];
 						$id = $listItem->snippet->resourceId->videoId;
 						$api_url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id='.$id.'&key='.$api_key;
@@ -145,6 +144,7 @@ echo '<div class="container">';
 
 						
 						if($data->items[0]->contentDetails->caption == 'true'){
+							// start to get caption and get caption's language first
 							$lan_api = 'https://www.googleapis.com/youtube/v3/captions?part=snippet&videoId='.$id.'&key='.$api_key;
 							$lan_data = json_decode(file_get_contents($lan_api));
 
@@ -172,8 +172,6 @@ echo '<div class="container">';
 								$sql="SELECT * FROM `video` WHERE `videoID`='$id'";
 						    	$result=mysqli_query($conn,$sql);
 
-						    	// echo $videoInfo;
-						    	// echo $json_caption	;
 						    
 						    	if(mysqli_num_rows($result)==0){  //if the video is not in table , then insert
 						  
