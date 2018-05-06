@@ -248,22 +248,20 @@
 							</div>
 						</div>
 					</div>
-					<!--  Ad part -->
+					<!--  Ad part - - -> insert youtube url part -->
 					<div class="col-xs-0 col-sm-0 col-md-3 col-lg-3">
-						<div class="qbox index-sidebar span3">
-	      					<div id="ad"><a href="/lessons/?apilang=zh_tw">看更多</a></div>
-	    					<h3>英文學習課程</h3>
-							<div class="clearfix"></div>
-	    					<div>
-	       						<ol id="sidecol" class="shortlist">
-								<!--  use ajax to insert advertise -->
+						<h3>Insert Video by Url</h3>
 
-	             				</ol>
-	    					</div>
-   						</div>
+						<form name ="search_form" action="api_getJson.php" method="get">
+  							Youtube video url:<br>
+  							<input type="text" name="videourl" value="">
+  							<br><br>
+  							<input value="Search" type="button" onclick="submit_form();">
+						</form>
 					</div>
 					<script type="text/javascript" src="js/ajax_thumb.js"></script>
-					<script type="text/javascript" src="js/ajax_ad.js"></script>
+					<script type="text/javascript" src="js/form.js"></script>
+					<!-- <script type="text/javascript" src="js/ajax_ad.js"></script> -->
 					<script type="text/javascript" src="js/infinite_scroll.js"></script>
 
 				</div>

@@ -51,7 +51,7 @@ ajaxRequest3.onreadystatechange = function() {
 
 // Send request to server
 var queryString3  = "?cap=";
-ajaxRequest3.open('GET', 'ajax_response_caption.php' + queryString3 + file, true);
+ajaxRequest3.open('GET', 'ajax_response_caption.php' + queryString3 + videoId, true);
 ajaxRequest3.send(null);
 // End of loading caption
 
