@@ -1,14 +1,5 @@
 <?php
-// // $dbhost = $_SERVER['aalq50qu52s8m1'];
-// // $dbport = $_SERVER['3306'];
-// // $dbname = $_SERVER['ebdb'];
-// // $charset = 'utf8' ;
-
-// // $dsn = "mysql:host={$dbhost};port={$dbport};dbname={$dbname};charset={$charset}";
-// // $dbuser = $_SERVER['iamwho1123'];
-// // $dbpass = $_SERVER['pig8525168'];
-
-// $pdo = new PDO($dsn, $dbuser, $dbpass);
+//setting connection to database
 $dbhost = 'localhost';
 $dbuser = 'id5635354_root';
 $dbpass = 'pig8525168';
@@ -29,6 +20,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     echo $e->getMessage();
   }
   //echo $cap;
+  //take caption from DB if video is in DB already
   $sql="SELECT caption FROM `video` WHERE `videoID`='$cap'";
   $result=mysqli_query($conn,$sql);
   $row = mysqli_fetch_array($result);

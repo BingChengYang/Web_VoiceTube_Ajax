@@ -125,6 +125,7 @@ echo '<div class="container">';
 					$pagedata = json_decode(file_get_contents($page_url));
 
 					for($v = 0; $v < count($pagedata->items); $v++){
+						//get caption language first
 						$listItem = $pagedata->items[$v];
 						$id = $listItem->snippet->resourceId->videoId;
 						$api_url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id='.$id.'&key='.$api_key;
@@ -132,6 +133,7 @@ echo '<div class="container">';
 						$data = json_decode(file_get_contents($api_url));
 						$image = 'https://img.youtube.com/vi/'.$id.'/0.jpg';
 
+						//build thumbnail information
 						$json_thumbnail = '{"data_video_id" : "'.$id.'",'
 						.'"a_href" : "player.html?id='.$id.'&file=caption_'.$id.'",'
 						.'"img_src" : "https://img.youtube.com/vi/'.$id.'/0.jpg",'
@@ -141,7 +143,7 @@ echo '<div class="container">';
 						.'"h5_a_href" : "'.$data->items[0]->snippet->title.'"}';
 
 
-
+						
 						if($data->items[0]->contentDetails->caption == 'true'){
 							$lan_api = 'https://www.googleapis.com/youtube/v3/captions?part=snippet&videoId='.$id.'&key='.$api_key;
 							$lan_data = json_decode(file_get_contents($lan_api));

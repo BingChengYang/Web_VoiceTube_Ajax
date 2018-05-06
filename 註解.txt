@@ -1,0 +1,14 @@
+index.html:
+(1)add Search form : line252
+
+ajax_response_thumb.php:
+(1)setting connection with MySQL : line3
+(2)insert jContent into MySQL : line36
+(3)count the max number of video can show in DB: line61
+
+ajax_response_caption.php:
+(1)setting connection to database : line2
+(2)take caption from DB if video is in DB already : line23
+
+form.js:
+(1) after submit then clean the form :line1

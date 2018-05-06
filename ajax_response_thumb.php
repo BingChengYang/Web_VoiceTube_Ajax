@@ -2,18 +2,6 @@
 
 #setting connection with MySQL
 
-// $dbhost = $_SERVER['aalq50qu52s8m1'];
-// $dbport = $_SERVER['3306'];
-// $dbname = $_SERVER['ebdb'];
-// $charset = 'utf8' ;
-
-// $dsn = "mysql:host={$dbhost};port={$dbport};dbname={$dbname};charset={$charset}";
-// $dbuser = $_SERVER['iamwho1123'];
-// $dbpass = $_SERVER['pig8525168'];
-
-// $pdo = new PDO($dsn, $dbuser, $dbpass);
-
-
 $dbhost = 'localhost';
 $dbuser = 'id5635354_root';
 $dbpass = 'pig8525168';
@@ -48,6 +36,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
   #insert jContent into MySQL
   foreach ($contents as $content) {
     # code...
+    // load video caption from file and insert it into database
     $captionPath = 'captions/caption_' . $content->data_video_id .'.JSON';
     # Load content from JSON file
     if(is_readable($captionPath))  
@@ -60,7 +49,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     $sql="SELECT * FROM `video` WHERE `videoID`='$content->data_video_id'";
     $result=mysqli_query($conn,$sql);
     
-    if(mysqli_num_rows($result)==0){  //if the video is not in table , then insert
+    if(mysqli_num_rows($result)==0){  //if the video is not in table , then insert it
       $videoInfo = mysqli_real_escape_string($conn,json_encode($content));
       
       $sql = "INSERT INTO video(videoID,videoInfo,caption) VALUES('$content->data_video_id','$videoInfo','$jCaption')";
@@ -69,7 +58,8 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
   }
   
   #calculate the number of video need to send back
-  $sql="SELECT COUNT(*) FROM `video`";
+  //count the max number of video can show
+  $sql="SELECT COUNT(*) FROM `video`"; 
   $result=mysqli_query($conn,$sql);
   $row = mysqli_fetch_array($result);
   //echo $row['COUNT(*)'];
@@ -90,6 +80,7 @@ $first = true;
 print '['; # Make an array
 for($i = ($page-1)*$pageShowVideo; $i < (($page-1)*$pageShowVideo) + $numShowVideo; $i++)
 {
+  //take thumbnail from DB
   if($first) $first = false;
   else print ',';
   $tableIndex = $i+1;

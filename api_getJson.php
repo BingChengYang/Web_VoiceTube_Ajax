@@ -1,6 +1,7 @@
 <?php
 //////////// video's tiltle, time and picture
 
+//setting db connection
 $dbhost = 'localhost';
 $dbuser = 'id5635354_root';
 $dbpass = 'pig8525168';
@@ -85,13 +86,6 @@ function getYouTubeVideoTime($timestr)
 	return $finalTime;
 }
 
-
-// $video_url = 'https://www.youtube.com/watch?v=9IG_sWQI2wA';
-// $video_url = 'https://www.youtube.com/watch?v=JEJlzFftb44';
-// $video_url = 'https://www.youtube.com/watch?v=pCSgWJzEvrM';
-// $video_url = 'https://www.youtube.com/watch?v=nMFrC3UGtek';
-//$video_url = 'https://www.youtube.com/watch?v=Sys_OyWgZqc';
-
 $api_key = 'AIzaSyAgWfAeq7kHU0PhMls1BqT0fMs-9iHNEv8';
 
 $video_url = $_GET["videourl"];
@@ -105,8 +99,6 @@ if(getYouTubeVideoID($video_url) == ""){
 
 		// playlist
 		header('Location: playlist.php?listid='.$listid);
-		// echo "totalResults: ".$listdata->pageInfo->totalResults."<br>";
-		// echo "resultsPerPage: ".$listdata->pageInfo->resultsPerPage."<br>";
 
 	}
 	else{
@@ -119,14 +111,8 @@ else{
 
 
 	$data = json_decode(file_get_contents($api_url));
-	//echo "A video!";
 
 	$image = 'https://img.youtube.com/vi/'.$id.'/0.jpg';
-	// echo '<img src="'.$image.'"><br>';
-	// echo '<strong>Title: </strong>'.$data->items[0]->snippet->title.'<br>';
-	// echo '<strong>Published At: </strong>'.$data->items[0]->snippet->publishedAt.'<br>';
-	// echo '<strong>Duration: </strong>'.$data->items[0]->contentDetails->duration.'<br>';
-	// echo '<strong>Caption: </strong>'.$data->items[0]->contentDetails->caption.'<br>';
 
 	$json_thumbnail = '{"data_video_id" : "'.$id.'",'
 						.'"a_href" : "player.html?id='.$id.'&file=caption_'.$id.'",'
@@ -136,13 +122,8 @@ else{
 						.'"data_original_title" : "'.$data->items[0]->snippet->title.'",'
 						.'"h5_a_href" : "'.$data->items[0]->snippet->title.'"}';
 
-	// echo '<br>';
-	// echo $json_thumbnail;
-	// echo '<br>';
 
-
-
-	//////////// get caption;
+	//////////// get caption and put it into database;
 
 	if($data->items[0]->contentDetails->caption == 'true'){
 				//get language
@@ -172,8 +153,6 @@ else{
 			$sql="SELECT * FROM `video` WHERE `videoID`='$id'";
 	    	$result=mysqli_query($conn,$sql);
 
-	    	// echo $videoInfo;
-	    	// echo $json_caption	;
 	    
 	    	if(mysqli_num_rows($result)==0){  //if the video is not in table , then insert
 	  
@@ -181,8 +160,7 @@ else{
 	        	mysqli_query($conn,$sql) or die($id);
 	    	}
 		}	
-		// echo '<br>';
-		// echo $json_caption;
+
 	}
 	else{
 		// no caption, maybe header to another html
