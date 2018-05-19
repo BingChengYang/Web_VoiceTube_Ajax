@@ -3,9 +3,9 @@
 #setting connection with MySQL
 
 $dbhost = 'localhost';
-$dbuser = 'id5635354_root';
+$dbuser = 'root';
 $dbpass = 'pig8525168';
-$dbname = 'id5635354_web';
+$dbname = 'web';
 $conn = mysqli_connect($dbhost, $dbuser, $dbpass) or die('Error with MySQL connection');
 mysqli_query($conn,"SET NAMES 'utf8'");
 mysqli_select_db($conn,$dbname);

@@ -3,9 +3,9 @@
 
 //setting db connection
 $dbhost = 'localhost';
-$dbuser = 'id5635354_root';
+$dbuser = 'root';
 $dbpass = 'pig8525168';
-$dbname = 'id5635354_web';
+$dbname = 'web';
 //$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die('Error with MySQL connection');
 $conn = mysqli_connect($dbhost, $dbuser, $dbpass) or die('Error with MySQL connection');
 mysqli_query($conn,"SET NAMES 'utf8'");
@@ -23,6 +23,7 @@ function getYouTubeVideoID($url)
 	}
 }
 
+//playlist
 function getYouTubePlaylistID($listurl)
 {
 	$queryString2 = parse_url($listurl, PHP_URL_QUERY);
@@ -37,7 +38,6 @@ function getYouTubePlaylistID($listurl)
 
 function getYouTubeVideoTime($timestr)
 {
-	// parsing the string that get from api and retrive the time
 	if(strpos($timestr, 'H') !== false){
 		$temp = explode('H',$timestr);
 		$hour = explode('T',$temp[0]);
@@ -97,7 +97,7 @@ if(getYouTubeVideoID($video_url) == ""){
 		// valid playlist's url
 		$listid = getYouTubePlaylistID($video_url);
 
-		// go to the playlist.php to show the whole list
+		// playlist
 		header('Location: playlist.php?listid='.$listid);
 
 	}
@@ -106,16 +106,20 @@ if(getYouTubeVideoID($video_url) == ""){
 	}
 }
 else{
-	// input url is single video
 	$id = getYouTubeVideoID($video_url);
 	$api_url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id='.$id.'&key='.$api_key;
+	$arrContextOptions=array(
+	    "ssl"=>array(
+	        "verify_peer"=>false,
+	        "verify_peer_name"=>false,
+	    ),
+	);  
 
 
-	$data = json_decode(file_get_contents($api_url));
+	$data = json_decode(file_get_contents($api_url, false, stream_context_create($arrContextOptions)));
 
 	$image = 'https://img.youtube.com/vi/'.$id.'/0.jpg';
 
-	// information for the home page to use to show thumbnails
 	$json_thumbnail = '{"data_video_id" : "'.$id.'",'
 						.'"a_href" : "player.html?id='.$id.'&file=caption_'.$id.'",'
 						.'"img_src" : "https://img.youtube.com/vi/'.$id.'/0.jpg",'
@@ -124,18 +128,17 @@ else{
 						.'"data_original_title" : "'.$data->items[0]->snippet->title.'",'
 						.'"h5_a_href" : "'.$data->items[0]->snippet->title.'"}';
 
-
-	//////////// get caption and put both two Json string into database;
+	//echo $json_thumbnail;
+	//////////// get caption and put it into database;
 
 	if($data->items[0]->contentDetails->caption == 'true'){
-		//get language
+				//get language
 		$lan_api = 'https://www.googleapis.com/youtube/v3/captions?part=snippet&videoId='.$id.'&key='.$api_key;
 		$lan_data = json_decode(file_get_contents($lan_api));
+
 		$language = $lan_data->items[0]->snippet->language;
 
 		$g_api_url = 'https://www.youtube.com/api/timedtext?lang='.$language.'&v='.$id;
-
-		// get the caption's xml
 		$xml_data = file_get_contents($g_api_url);
 		$xml_data = str_replace(array("\n", "\r", "\t"), '', $xml_data);
      	$xml_data = trim(str_replace('"', "'", $xml_data));
@@ -151,8 +154,6 @@ else{
 			} 
 			$json_caption = substr($json_caption, 0, -1);
 			$json_caption = $json_caption.']}';
-
-			// escape two json string and insert into database
 			$json_caption = mysqli_real_escape_string($conn,$json_caption);
 	    	$videoInfo = mysqli_real_escape_string($conn,$json_thumbnail);
 			$sql="SELECT * FROM `video` WHERE `videoID`='$id'";
@@ -168,9 +169,18 @@ else{
 
 	}
 	else{
+		$videoInfo = mysqli_real_escape_string($conn,$json_thumbnail);
+		$sql="SELECT * FROM `video` WHERE `videoID`='$id'";
+	    $result=mysqli_query($conn,$sql);
+
+	    
+	    if(mysqli_num_rows($result)==0){  //if the video is not in table , then insert
+	  
+	  	    $sql = "INSERT INTO video(videoID,videoInfo) VALUES('$id','$videoInfo')";
+	        mysqli_query($conn,$sql) or die($id);
+	    }
 		// no caption, maybe header to another html
 	}
-	// after inserting into database then go to the player.html to play the video
 	header('Location: player.html?id='.$id.'&file=caption_'.$id);
 
 	// there is v=... in url, then check whethere the video is in list

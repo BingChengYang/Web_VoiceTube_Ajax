@@ -1,0 +1,8 @@
+#table_div {
+	overflow: auto;
+	height: 250px;
+}
+
+#save_subtitle {
+	float: right;
+}
