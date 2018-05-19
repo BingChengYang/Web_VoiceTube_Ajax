@@ -1,4 +1,3 @@
-// check when pressing the add_subtitle button 
 var s_table = document.getElementById("subtitle_table");
 var add_s = document.getElementById("add_subtitle");
 add_s.onclick = checkNewSubtitle;
@@ -13,8 +12,8 @@ $.ajax({
           }
         });
 
+// laod the caption we already have to the table
 function renderCapHTML(jcontent){
-  // console.log("jcontent: " + jcontent);
   for(var key in jcontent.en)
   {
     var jstart = Number(jcontent.en[key].start);
@@ -46,15 +45,14 @@ function renderCapHTML(jcontent){
             '<input type="button" value="Create" onclick="insertRow(this)">'+
           '</td>'+
         '</tr>');
-    // console.log("start : " + jcontent.en[key].start + " dur : " + jcontent.en[key].dur + "\n");
-    // console.log("text : " + jcontent.en[key].text + "\n");
   }
   SetTableCanEdit(s_table);
 }
 
-// Add new subtitle
+// check when pressing the add_subtitle button
 function checkNewSubtitle(){
     var asub = document.getElementById("a_sub");
+    // default start time is the current time of the video
     var currentTime = player.getCurrentTime();
     var asm =  Math.floor(currentTime / 60);
     var ass = Math.floor(currentTime - (asm * 60));
@@ -101,31 +99,29 @@ function checkNewSubtitle(){
     }
 }
 
+
+
 // maintain the order of subtitle
 function sortTable() {
   var rows, switching, i, x, y, shouldSwitch;
 
   switching = true;
-  /*Make a loop that will continue until
-  no switching has been done:*/
+  // Make a loop that will continue until no switching has been done
   while (switching) {
     //start by saying: no switching is done:
     switching = false;
     rows = s_table.getElementsByTagName("TR");
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
+    // Loop through all table rows
     for (i = 0; i < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
+      //start by saying there should be no switching
       shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      // x = rows[i].getElementsByTagName("TD")[0];
+      // Get the two elements you want to compare,
+      // one from current row and one from the next
       x = rows[i].cells[0].querySelectorAll('input')[0];
       y = rows[i + 1].cells[0].querySelectorAll('input')[0];
-      //check if the two rows should switch place:
-      // console.log("out=> x: " + x.value + " y: " + y.value);
+
+      //check if the two rows should switch place
       if (Number(x.value) > Number(y.value)) {
-        //if so, mark as a switch and break the loop:
         shouldSwitch= true;
         break;
       }
@@ -146,9 +142,8 @@ function sortTable() {
         }
       }
     }
+    // If a switch has been marked, make the switch
     if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
       switching = true;
     }
@@ -172,25 +167,16 @@ function checkStartEndTime(){
       // check the start-end relation first
       if(em < sm){
           haveFault = true;
-          // console.log("em : " + em + " sm : " + sm);
-          // rows[i].cells[0].querySelectorAll('input')[3].focus();
-          // rows[i].cells[0].querySelectorAll('input')[3].select();
           break;
       }
       else if(em === sm){
           if(es < ss){
             haveFault = true;
-            // console.log("es : " + es + " ss : " + ss);
-            // rows[i].cells[0].querySelectorAll('input')[4].focus();
-            // rows[i].cells[0].querySelectorAll('input')[4].select();
             break;
           }
           else if(es === ss){
-              if(ems <= sms){
+              if(ems < sms){
                 haveFault = true;
-                // console.log("ems : " + ems + " sms : " + sms);
-                // rows[i].cells[0].querySelectorAll('input')[5].focus();
-                // rows[i].cells[0].querySelectorAll('input')[5].select();
                 break;
               }
           }
@@ -208,23 +194,28 @@ function checkStartEndTime(){
         // then check whether there is time range conflict between two subtitles
         if(em > nsm){
             haveFault = true;
-            // console.log("em : " + em + " nsm : " + nsm);
-            // rows[i].cells[0].querySelectorAll('input')[3].focus();
-            // rows[i].cells[0].querySelectorAll('input')[3].select();
             break;
         }
         else if(em === nsm){
             if(es > nss){
                 haveFault = true;
-                // console.log("es : " + es + " nss : " + nss);
                 break;
             }
         }
       }
-
   }
+
   if(haveFault){
-    alert("illegal time!");
+    // closure pattern + immediate function + return object pattern
+    var warning = (function(){
+      var warningWords = 'illegal time!';
+      return {
+        display : function(){
+                    alert(warningWords);
+                  }
+      };
+    }());
+    warning.display();
     return false;
   }
   else{
@@ -240,9 +231,9 @@ function SetTableCanEdit(table){
      SetRowCanEdit(table.rows[i]);    
   }    
 }
-    
+   
+// action for subtitle, return object 
 function SetRowCanEdit(row){  
-    // action for subtitle, return object
     row.cells[1].onclick = function (){    
       var editcell = function() {
         return function (element, editType){
@@ -251,42 +242,40 @@ function SetRowCanEdit(row){
       };
       var next = editcell();
       next(this); 
-    }  
+    } 
 }
 
 
 
-function CreateTextBox(element, value){    
-  //检查编辑状态，如果已经是编辑状态，跳过    
-  var editState = element.getAttribute("EditState");    
-  if(editState != "true"){    
-     //创建文本框    
-     var textBox = document.createElement("INPUT");    
-     textBox.type = "text";    
-     textBox.className="EditCell_TextBox";    
-        
-        
-     //设置文本框当前值    
-     if(!value){
-      value = element.getAttribute("Value");    
-     }     
-     textBox.value = value;    
-        
-     // set value when no focus  
-     textBox.onblur = function (){
-        CancelEditCell(this.parentNode, this.value);    
-     }    
-     //向当前单元格添加文本框    
-     element.innerHTML = "";   
-     element.appendChild(textBox);    
-     textBox.focus();    
-     textBox.select();    
+function CreateTextBox(element, value){     
+  var editState = element.getAttribute("EditState"); 
+  // determine whether the text is in edited state   
+  if(editState != "true"){
+      // let the text become the input element and can be edited   
+      var textBox = document.createElement("INPUT");    
+      textBox.type = "text";    
+      textBox.className="EditCell_TextBox";    
           
-     element.setAttribute("EditState", "true");     
+      if(!value){
+      value = element.getAttribute("Value");    
+      }
+      textBox.value = value;    
+        
+      // set value when no focus  
+      textBox.onblur = function (){
+        CancelEditCell(this.parentNode, this.value);    
+      }     
+      element.innerHTML = "";   
+      element.appendChild(textBox);    
+      textBox.focus();    
+      textBox.select();    
+          
+      element.setAttribute("EditState", "true");     
   }    
     
 }
 
+// when not focus, set the value for the table cell
 function CancelEditCell(element, value, text){    
   element.setAttribute("Value", value);    
   if(text){    
@@ -297,9 +286,17 @@ function CancelEditCell(element, value, text){
   element.setAttribute("EditState", "false");    
 }  
 
-if(s_table.rows.length != 0){
-  SetTableCanEdit(s_table);
-}
+// callback pattern + immediate function
+(function(callback) {
+    if (typeof callback === "function") {
+        callback(s_table.rows.length);
+    }
+  }(function(len) {
+      if(len != 0){
+          SetTableCanEdit(s_table);
+      }
+    })
+);
 
 // delete and insert row
 function deleteRow(r) {
@@ -318,7 +315,8 @@ function insertRow(r){
       tmpnexts = Number(s_table.rows[idx+1].cells[0].querySelectorAll('input')[1].value),
       tmpnextms = Number(s_table.rows[idx+1].cells[0].querySelectorAll('input')[2].value);
 
-  var gap = (tmpnextm * 60 + tmpnexts + tmpnextms * 0.1) - (tmpm * 60 + tmps + tmpms * 0.1);// the dur between two caption
+  // gap = the dur between two caption
+  var gap = (tmpnextm * 60 + tmpnexts + tmpnextms * 0.1) - (tmpm * 60 + tmps + tmpms * 0.1);
   // can insert new row
   if(gap >= 1)
   {
@@ -448,14 +446,14 @@ function sendEditedCaption(){
       captionstring = captionstring.substr(0, captionstring.length - 1);
       captionstring = captionstring + ']}';
 
-      // send back the edited caption
+      // send back the edited caption to server
       $.post("edit_caption_response.php?id="+videoId,
               {
                 newcaption : captionstring
               },
               function(data){
                   console.log(data);
-                  location.href = "player.html?id="+videoId +"&file=caption_" + videoId;
+				  location.href = "player.html?id="+videoId +"&file=caption_" + videoId;
               }
             );
   }
