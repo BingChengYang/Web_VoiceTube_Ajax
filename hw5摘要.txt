@@ -1,0 +1,38 @@
+1. 編輯字幕的功能 (參考 youtube 的介面)
+    a. 新增字幕：
+	edit_caption.js：line 50-103
+
+    b. 編輯
+        (1) 文字：
+		edit_caption.js : line 231-290
+        (2) 開始、結束時間：
+		原本就有字幕載入的：edit_caption.js : line 14-48
+		按新增字幕的按鈕所新增的：edit_caption.js : line 54-103
+		都是直接使用 input element(type=number)而能提供使用者編輯的。
+	
+編輯完後，我們是改用一個save button按下後，便會將整份編輯後的字幕傳回資料庫：
+	edit_caption.js : line 422-462
+
+    c. 刪除
+	每行字幕旁邊都還有兩個按鍵，一個是像youtube一樣能直接接著這行時間	  		
+	往下新增一行空白字幕，一個就是刪除該行字幕的鍵了：
+	edit_caption.js : line 305-420，這些code分別設為那些button的onclick
+
+    d. 上傳 SRT 字幕
+		(1)檢查只有SRT可以被上傳:
+		upload.php : line 41
+		(2)parse SRT並轉成JSON:
+		upload.php : line 43-115
+		(3)存進資料庫並轉回編輯頁:
+		upload.php : line 117-126
+
+2. 使用以下 pattern
+    a. callback
+	edit_caption.js : line 292-302
+
+    b. closure
+	edit_caption.js : line 212-221	
+
+    c. return object
+	edit_caption.js : line 212-221, line241-247(return function object)
+

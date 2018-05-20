@@ -1,6 +1,4 @@
 var s_table = document.getElementById("subtitle_table");
-var add_s = document.getElementById("add_subtitle");
-add_s.onclick = checkNewSubtitle;
 
 // request the video's caption by ajax if it already has 
 $.ajax({
@@ -49,6 +47,9 @@ function renderCapHTML(jcontent){
   SetTableCanEdit(s_table);
 }
 
+// set onclick for the add_subtitle button
+var add_s = document.getElementById("add_subtitle");
+add_s.onclick = checkNewSubtitle; 
 // check when pressing the add_subtitle button
 function checkNewSubtitle(){
     var asub = document.getElementById("a_sub");
@@ -91,8 +92,10 @@ function checkNewSubtitle(){
             '<input type="button" value="Create" onclick="insertRow(this)">'+
           '</td>'+
         '</tr>');
+      // set the textbox to blank
       asub.value = "";
       if(s_table.rows.length != 0){
+        // need to sort the order and let them become editable
         sortTable();
         SetTableCanEdit(s_table);
       }
@@ -206,7 +209,7 @@ function checkStartEndTime(){
   }
 
   if(haveFault){
-    // closure pattern + immediate function + return object pattern
+    // closure pattern + return object pattern + immediate function 
     var warning = (function(){
       var warningWords = 'illegal time!';
       return {
@@ -234,7 +237,7 @@ function SetTableCanEdit(table){
    
 // action for subtitle, return object 
 function SetRowCanEdit(row){  
-    row.cells[1].onclick = function (){    
+    row.cells[1].onclick = function (){   
       var editcell = function() {
         return function (element, editType){
           CreateTextBox(element, element.innerHTML);
@@ -342,7 +345,7 @@ function insertRow(r){
 
     var br = document.createElement("br");
     cell1.appendChild(br); cell1.append('- ');
-    // the dur between two caption is < 2 sec.
+    // the duration between two caption is < 2 sec.
     if(gap < 2)
     {
       var t4 = document.createElement("input");
@@ -453,7 +456,7 @@ function sendEditedCaption(){
               },
               function(data){
                   console.log(data);
-				  location.href = "player.html?id="+videoId +"&file=caption_" + videoId;
+				   location.href = "player.html?id="+videoId +"&file=caption_" + videoId;
               }
             );
   }

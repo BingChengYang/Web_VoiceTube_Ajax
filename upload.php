@@ -38,7 +38,7 @@
 		if (file_exists("upload/" . $_FILES["file"]["name"])){
 			echo "檔案已經存在，請勿重覆上傳相同檔案";
 		}else{
-			if(in_array($extension,array('srt'))){//檢查檔案副檔名
+			if(in_array($extension,array('srt'))){//check only srt file can upload
 				move_uploaded_file($_FILES["file"]["tmp_name"],"upload/".$_FILES["file"]["name"]);
 								// parse srt
 				define('SRT_STATE_SUBNUMBER', 0);
